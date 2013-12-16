@@ -1,0 +1,22 @@
+{{extend 'layout_bridge.html'}}
+<h1>Atendimento</h1>
+<a href="editar" class='btn'><span class='icon plus icon-plus'></span><span class='buttontext button'>Adicionar</span></a>
+<table class='table-striped web2py_grid'>
+	<thead>
+		<tr>
+			<th>Nome</th>
+			<th>Email</th>
+			<th></th>
+		</tr>
+	</thead>
+	{{for x in lista:}}
+		<tr>
+			<td>{{=x.nome}}</td>
+			<td>{{=x.email}}</td>
+			<td>
+				<a href="editar/{{=x.id}}" class='btn'><span class='icon pen icon-pencil'></span><span class='buttontext button' title='Editar'>Editar</span></a>
+				<a href="excluir/{{=x.id}}" class='btn'><span class='icon trash icon-trash'></span><span class='buttontext button' title='Excluir'>Excluir</span></a>
+			</td>
+		</tr>
+	{{pass}}
+</table>
