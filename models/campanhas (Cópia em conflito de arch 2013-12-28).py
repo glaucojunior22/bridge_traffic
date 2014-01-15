@@ -2,18 +2,13 @@
 #validador pré-definido
 not_empty = IS_NOT_EMPTY(error_message=msg_erro['empty'])
 #tabela de agências
-db.define_table('t_agencia',
-                Field('nome_agencia'),
-                Field('nome_contato'),
-                Field('email'))
-#                format='%(nome_agencia)s - %(nome_contato)s')
+db.define_table('agencia',
+                Field('agencia', notnull=True),
+                Field('nome', notnull=True),
+                Field('email', notnull=True),
+                format='%(nome)s - %(agencia)s')
 #validadores da tabela agencia
-db.t_agencia.nome_agencia.requires = not_empty
-db.t_agencia.nome_contato.requires = not_empty
-db.t_agencia.email.requires = IS_EMAIL(error_message=msg_erro['email'])
-#db.agencia._plural = 'Agências'
-#db.agencia._singular = 'Agência'
-
+db.agencia.email.requires = IS_EMAIL(error_message=msg_erro['email'])
 #tabela executivo
 db.define_table('executivo',
                 Field('nome', notnull=True),
@@ -33,16 +28,16 @@ db.atendimento.email.requires = IS_EMAIL(error_message=msg_erro['email'])
 db.define_table('campanha',
                 Field('nome', notnull=True),
                 Field('cliente', notnull=True),
-                Field('agencia', 'list:reference t_agencia'),
+                Field('agencia', 'reference agencia'),
                 Field('executivo', 'reference executivo', notnull=True),
                 Field('atendimento', 'reference atendimento', notnull=True),
                 Field('data_inicio', 'date', notnull=True),
                 Field('data_fim', 'date', notnull=True),
-                Field('tipo'),
+                Field('tipo', 'list:string'),
                 Field('editorias', 'list:string'),
                 Field('rede', 'list:string'),
                 Field('pontos', 'list:reference ponto'),
-                Field('arquivos', 'list:reference arquivo', notnull=False),
+                Field('arquivo', 'upload'),
                 Field('observacoes', 'text'),
                 format='%(nome)s %(data_inicio)s - %(data_fim)s'
                 )
@@ -50,7 +45,7 @@ db.define_table('campanha',
 #validadores tabela campanha
 db.campanha.nome.requires = not_empty
 db.campanha.cliente.requires = not_empty
-db.campanha.agencia.requires = IS_IN_DB(db, 't_agencia.id', '%(nome_agencia)s - %(nome_contato)s', multiple=True, error_message=msg_erro['not_in_db'])
+db.campanha.agencia.requires = IS_IN_DB(db, 'agencia.id', '%(nome)s - %(agencia)s', multiple=True, error_message=msg_erro['not_in_db'])
 db.campanha.executivo.requires = IS_IN_DB(db, 'executivo.id', 'executivo.nome', error_message=msg_erro['not_in_db'])
 db.campanha.atendimento.requires = IS_IN_DB(db, 'atendimento.id', 'atendimento.nome', error_message=msg_erro['not_in_db'])
 db.campanha.data_inicio.requires = IS_DATE(format=T('%d/%m/%Y'), error_message='formato incorreto: dd/mm/yyyy')
@@ -58,18 +53,9 @@ db.campanha.data_fim.requires = IS_DATE(format=T('%d/%m/%Y'), error_message='for
 db.campanha.rede.requires = IS_IN_SET(redes, multiple=True, error_message=msg_erro['not_in_set'])
 db.campanha.pontos.requires = IS_IN_DB(db, 'ponto.id', 'ponto.cod_player', multiple=True, error_message=msg_erro['not_in_db'])
 db.campanha.tipo.requires = IS_IN_SET(tipo_campanha, error_message=msg_erro['not_in_set'])
-db.campanha.arquivos.requires = IS_IN_DB(db, 'arquivo.id', 'arquivo.arquivo', multiple=True, error_message=msg_erro['not_in_db'])
-
-#tabela para guardar os arquivos
-db.define_table('arquivo',
-                Field('arquivo', 'upload', autodelete=True, notnull=False),
-                #Field('campanha', 'reference campanha', notnull=True),
-                #represent = lambda x, row: A(_href=URL('default', 'download/%s'%row.arquivo))
-                )
-#validadores da tabela arquivo
-#db.arquivo.campanha.requires = IS_IN_DB(db, 'campanha.id', '%(nome)s %(data_inicio)s - %(data_fim)s')
 
 #tabela ponto
+
 db.define_table('ponto',
                 Field('cod_rede', notnull=True),
                 Field('cod_ponto', notnull=True),

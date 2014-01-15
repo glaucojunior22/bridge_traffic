@@ -1,3 +1,65 @@
+{{response.files.extend([URL('static','pekeUpload/css/custom.css'),URL('static','pekeUpload/js/pekeUpload.js')])}}
+{{response.files.extend([URL('static','css/validationEngine.jquery.css'),URL('static','js/jquery.validationEngine.js'),URL('static','js/jquery.validationEngine-pt_BR.js')])}}
 {{extend 'layout_bridge.html'}}
 <h2>Campanha</h2>
 {{=form}}
+{{=script}}
+
+<div id="form-content" class="modal hide fade in" style="display: none; ">
+	<div class="modal-header">
+		<a class="close" data-dismiss="modal">×</a>
+		<h3>Agência</h3>
+	</div>
+	<div>
+		<form class="agencia" id="frm_agencia">
+		<fieldset>
+		<div class="modal-body">
+			<ul class="nav nav-list">
+				<li class="nav-header">Nome da Agência:</li>
+				<li><input type="text" name="nome_agencia" id="nome_agencia" class="input-xlarge string validate[required]"></li>
+				<li class="nav-header">Nome do Contato:</li>
+				<li><input type="text" name="nome_contato" id="nome_contato" class="input-xlarge string validate[required]"></li>
+				<li class="nav-header">Email:</li>
+				<li><input type="text" name="email" id="email" class="input-xlarge string validate[required,custom[email]]"></li>
+			</ul> 
+        </div>
+		</fieldset>
+		</form>
+	</div>
+	<div class="modal-footer">
+		<button class="btn btn-primary" id="submit">Salvar</button>
+		<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+	</div>
+</div>
+<script>
+$(document).ready(function(){
+    $("#frm_agencia").validationEngine();
+});
+ $(function() {
+	//twitter bootstrap script
+	$("button#submit").click(function(){
+    	if ($('#frm_agencia').validationEngine('validate')){
+        $.ajax({
+        type: "POST",
+    	url: 'http://' + window.location.host + '/traffic/agencia/ajax_add',
+    	data: $('form.agencia').serialize(),
+        success: function(data){
+            //$("#thanks").html(data);
+            if (data == 'Erro'){
+            	alert('Erro! Verifique os dados e tente novamente.');
+            }else{
+                var agencia = $('#nome_agencia').val();
+                var contato = $('#nome_contato').val();
+                var email = $('#email').val();
+                $('#campanha_agencia').append($('<option>', {value: data, text: agencia + ' - ' + contato, selected: true}))
+                $("#form-content").modal('hide');
+        	}
+        },
+    	error: function(){
+        	alert('Erro ao tentar cadastrar a agência.');
+        }
+        });
+    	}
+    });
+});
+</script>

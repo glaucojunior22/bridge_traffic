@@ -8,6 +8,7 @@
 ## - download is for downloading files uploaded in the db (does streaming)
 ## - call exposes all registered services (none by default)
 #########################################################################
+import gluon.contrib.simplejson
 
 @auth.requires_membership('admin') #descomentar para habilitar segurança
 def index():
@@ -135,3 +136,50 @@ def data():
       LOAD('default','data.load',args='tables',ajax=True,user_signature=True)
     """
     return dict(form=crud())
+
+def upload_file():
+    """
+    File upload handler for the ajax form of the plugin jquery-file-upload
+    Return the response in JSON required by the plugin
+    """
+    try:
+        # Get the file from the form
+        #f = request.vars['arquivos']
+        
+        # Store file
+        id = db.arquivo.insert(arquivo = db.arquivo.arquivo.store(request.vars.file, request.vars.filename))
+         
+        # Compute size of the file and update the record
+        # record = db.arquivos[id]
+        # path_list = []
+        # path_list.append(request.folder)
+        # path_list.append('uploads')
+        # path_list.append(record['arquivo'])
+        # size =  shutil.os.path.getsize(shutil.os.path.join(*path_list))
+        # File = db(db.arquivos.id==id).select()[0]
+        # db.arquivos[id] = dict(tamanho=size)
+        # db.arquivos[id] = dict(id_secao=response.session_id)
+         
+        # res = dict(files=[{"name": str(f.filename), "size": size, "url": URL(f='download', args=[File['arquivo']]), "thumbnail_url": URL(f='download', args=[File['thumb']]), "delete_url": URL(f='delete_file', args=[File['arquivo']]), "delete_type": "DELETE" }])
+        #res = dict(id=id)
+        #return gluon.contrib.simplejson.dumps(res, separators=(',',':'))
+        return id
+
+    except:
+        return dict(message=T('Upload error'))
+
+ 
+def delete_file():
+        """
+        Delete an uploaded file
+        """
+        try:
+            name = request.args[0]
+            db(db.arquivo.arquivo==name).delete()
+            return name
+        except:
+            return 'erro'
+ 
+ 
+def upload():
+        return dict()
