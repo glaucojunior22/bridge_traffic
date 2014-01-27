@@ -26,6 +26,7 @@ def index():
                 showErrorAlerts: false,
                 onFileError: function(file,error){
                     $('#campanha_arquivos').append($('<option>', {value: error, text: error, selected: true}));
+                    $('div.pekecontainer').append('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><span class="glyphicon glyphicon-ok"></span><p>'+file+' adicionado com sucesso!</p></div>');
                 }
                 });
             '''
@@ -76,7 +77,6 @@ def index():
             //Função para tratar os uploads via ajax
             arquivos = $('#campanha_arquivos');
             arquivos.parent().append('<input class="upload" id="file_upload" name="file_upload" type="file">');
-            //arquivos.css({'width':'1px','height':'1px','visibility':'hidden'});
             arquivos.hide();
             $('#file_upload').pekeUpload({
                 btnText: 'Adicionar',
@@ -85,6 +85,7 @@ def index():
                 showErrorAlerts: false,
                 onFileError: function(file,error){
                     $('#campanha_arquivos').append($('<option>', {value: error, text: error, selected: true}));
+                    $('div.pekecontainer').append('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button><span class="glyphicon glyphicon-ok"></span><p>'+file['name']+' adicionado com sucesso!</p></div>');
                     //$('div.pekecontainer').hide();
                     //$('div.alert-error').css('display','none');
                 }

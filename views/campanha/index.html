@@ -1,9 +1,9 @@
 {{response.files.extend([URL('static','pekeUpload/css/custom.css'),URL('static','pekeUpload/js/pekeUpload.js')])}}
-{{response.files.extend([URL('static','css/validationEngine.jquery.css'),URL('static','js/jquery.validationEngine.js'),URL('static','js/jquery.validationEngine-pt_BR.js')])}}
+{{response.files.extend([URL('static','css/validationEngine.jquery.css'),URL('static','js/jquery.validationEngine.js'),URL('static','js/jquery.validationEngine-pt_BR.js'),URL('static','js/campanha.js')])}}
 {{extend 'layout_bridge.html'}}
 <h2>Campanha</h2>
 {{=form}}
-{{=script}}
+
 
 <div id="form-content" class="modal hide fade in" style="display: none; ">
 	<div class="modal-header">
@@ -31,7 +31,7 @@
 		<a href="#" class="btn" data-dismiss="modal">Fechar</a>
 	</div>
 </div>
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
     $("#frm_agencia").validationEngine();
 });
